@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+db.sqlite3
+.env
+server.out.log
+server.err.log
+server_ps.log

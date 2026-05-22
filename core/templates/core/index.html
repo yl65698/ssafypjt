@@ -1,0 +1,197 @@
+{% load static %}
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>VRSE</title>
+  <link rel="stylesheet" href="{% static 'core/styles.css' %}">
+</head>
+<body>
+  <header class="topbar">
+    <button class="brand" data-view="welcome" type="button">
+      <span>DealSync</span>
+      <strong>VRSE</strong>
+    </button>
+    <nav id="app-nav" class="hidden">
+      <button data-view="dashboard" type="button">게임 찾기</button>
+      <button data-view="gear" type="button">장비 구매</button>
+      <button data-view="profile" type="button">프로필</button>
+      <button id="logout-button" type="button">로그아웃</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="welcome-view" class="view">
+      <div class="welcome-hero">
+        <div class="hero-copy">
+          <p class="eyebrow">AI game decision platform</p>
+          <h1>게임을 고르는 순간부터 플레이 환경까지.</h1>
+          <p>
+            VRSE는 게임 가격 변동, 플랫폼별 최저가, 구매 타이밍, 내 장비 실행 가능 여부,
+            필요한 업그레이드까지 한 번에 보여주는 게임 의사결정 서비스입니다.
+          </p>
+          <div class="hero-actions">
+            <button class="primary-button" data-view="auth" type="button">시작하기</button>
+            <button class="secondary-button" data-view="dashboard" data-demo type="button">둘러보기</button>
+          </div>
+        </div>
+        <div class="signal-board">
+          <div>
+            <span>BUY SCORE</span>
+            <strong>87</strong>
+            <p>현재 할인율과 역대 최저가를 함께 비교합니다.</p>
+          </div>
+          <div>
+            <span>GEAR CHECK</span>
+            <strong>QHD</strong>
+            <p>보유 장비로 가능한 목표 환경을 계산합니다.</p>
+          </div>
+        </div>
+      </div>
+      <div class="feature-strip">
+        <article>
+          <strong>가격 추이</strong>
+          <p>최근 가격 흐름을 그래프로 확인합니다.</p>
+        </article>
+        <article>
+          <strong>구매 타이밍</strong>
+          <p>BUY, WATCH, WAIT로 판단을 도와줍니다.</p>
+        </article>
+        <article>
+          <strong>장비 추천</strong>
+          <p>부족한 장비와 구매 후보를 연결합니다.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="auth-view" class="view hidden narrow-view">
+      <div class="panel auth-card">
+        <p class="eyebrow">Login</p>
+        <h2>VRSE에 로그인</h2>
+        <p class="muted">로그인하면 게임 선택, 보유 장비, 플레이 성향을 프로필에 저장할 수 있습니다.</p>
+        <form id="auth-form" class="stack-form">
+          <input name="email" type="email" placeholder="email@example.com" required>
+          <input name="password" type="password" placeholder="password" required>
+          <input name="nickname" type="text" placeholder="닉네임">
+          <div class="button-row">
+            <button type="button" id="login-button">로그인</button>
+            <button type="submit" class="secondary-button">회원가입</button>
+          </div>
+          <p id="auth-message" class="muted"></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="dashboard-view" class="view hidden">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Choose your game</p>
+          <h2>오늘은 어떤 게임을 볼까요?</h2>
+        </div>
+        <form class="search" id="game-search-form">
+          <input id="game-query" type="search" placeholder="게임명, 장르, 태그 검색">
+          <button type="submit">검색</button>
+        </form>
+      </div>
+
+      <form class="ai-search" id="ai-search-form">
+        <input id="ai-query" type="text" placeholder="예: 친구랑 할 수 있고 어렵지 않은 협동 게임 추천해줘">
+        <button type="submit">AI 추천</button>
+      </form>
+
+      <section class="section">
+        <div class="section-head compact">
+          <h3>오늘의 추천 게임</h3>
+        </div>
+        <div class="grid" id="dashboard-grid"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head compact">
+          <h3>게임 검색 결과</h3>
+        </div>
+        <div class="grid" id="game-grid"></div>
+      </section>
+    </section>
+
+    <section id="game-detail-view" class="view hidden">
+      <button class="back-button" data-view="dashboard" type="button">← 게임 목록으로</button>
+      <div class="detail-shell">
+        <article class="panel detail-main" id="game-detail"></article>
+        <aside class="panel side-panel" id="gear-check"></aside>
+      </div>
+    </section>
+
+    <section id="gear-view" class="view hidden">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Gear shop</p>
+          <h2>필요한 장비 구매하기</h2>
+        </div>
+        <form class="search" id="product-search-form">
+          <input id="product-query" type="search" placeholder="GPU, CPU, 모니터 검색">
+          <button type="submit">검색</button>
+        </form>
+      </div>
+      <div class="grid" id="product-grid"></div>
+    </section>
+
+    <section id="product-detail-view" class="view hidden">
+      <button class="back-button" data-view="gear" type="button">← 장비 목록으로</button>
+      <article class="panel product-detail" id="product-detail"></article>
+    </section>
+
+    <section id="device-view" class="view hidden narrow-view">
+      <div class="panel">
+        <p class="eyebrow">My gear</p>
+        <h2>내 장비 정보 업데이트</h2>
+        <form class="stack-form" id="device-form">
+          <input name="cpu" placeholder="CPU 예: Ryzen 5 5600" required>
+          <input name="gpu" placeholder="GPU 예: RTX 3060" required>
+          <input name="ram_gb" type="number" placeholder="RAM GB" value="16" required>
+          <input name="storage_gb" type="number" placeholder="Storage GB" value="512" required>
+          <select name="monitor_resolution">
+            <option>FHD</option>
+            <option>QHD</option>
+            <option>4K</option>
+          </select>
+          <input name="refresh_rate" type="number" placeholder="주사율 Hz" value="144" required>
+          <button type="submit">장비 저장</button>
+          <p id="device-message" class="muted"></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="profile-view" class="view hidden">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Profile</p>
+          <h2>내 게임 라이프</h2>
+        </div>
+        <button data-view="device" type="button">내 장비 정보 업데이트</button>
+      </div>
+      <div class="profile-layout">
+        <article class="panel">
+          <h3>지금 가진 게임</h3>
+          <div id="owned-games" class="list-box"></div>
+        </article>
+        <article class="panel">
+          <h3>지금 가진 장비</h3>
+          <div id="owned-devices" class="list-box"></div>
+        </article>
+        <article class="panel wide-panel">
+          <div class="section-head compact">
+            <h3>내 게임 플레이 성향</h3>
+            <button id="dna-button" type="button">분석하기</button>
+          </div>
+          <div class="dna" id="dna-chart"></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script src="{% static 'core/app.js' %}"></script>
+</body>
+</html>
